@@ -14,7 +14,6 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            cd ClickUpPython
             python -m venv venv
             pip install -r requirements.txt
             pip install pytest pytest-html python-dotenv
@@ -29,7 +28,7 @@ jobs:
             echo "TEAM_ID=$TEAM_ID" >> .env
       - run:
           name: Run tests and generate report
-          command: cd ClickUpPython && pytest Tests --html=report.html --self-contained-html
+          command: pytest Tests --html=report.html --self-contained-html
       - store_artifacts:
           path: ClickUpPython/report.ntml
           destination: pytest_html_report
