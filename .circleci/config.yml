@@ -18,6 +18,12 @@ jobs:
               . venv/bin/activate
               pip install -r requirements.txt
               pip install pytest pytest-html python-dotenv
+        - run: 
+            name: "echo an env var that is part of our project"
+            command: |
+              echo $TOKEN
+              echo $BASE_URL
+              echo $TEAM_ID
         - run:
             name: Run tests and generate report
             command: |
