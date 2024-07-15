@@ -1,34 +1,23 @@
 version: 2.1
 
-executors:
-  python-executor:
-    docker:
-      - image: circleci/python:3.9  
-    working_directory: ~/repo
-
 jobs:
-  test:
-    executor: python-executor
-    steps:
+  docker:
+      - image: circleci/python:3.9  
+  steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
+            . venv/bin/activate
             python -m venv venv
             pip install -r requirements.txt
             pip install pytest pytest-html python-dotenv
             pip install "python-dotenv[cli]"
       - run:
-          name: Load environment variables
-          command: |
-            echo "Loading environment variables from CircleCI project settings"
-            touch .env
-            echo "TOKEN=$TOKEN" >> .env
-            echo "BASE_URL=$BASE_URL" >> .env
-            echo "TEAM_ID=$TEAM_ID" >> .env
-      - run:
           name: Run tests and generate report
-          command: pytest Tests --html=report.html --self-contained-html
+          command: |
+            . venv/bin/activate
+            pytest Tests --html=report.html --self-contained-html
       - store_artifacts:
           path: ClickUpPython/report.ntml
           destination: pytest_html_report
@@ -37,4 +26,4 @@ workflows:
   version: 2
   test:
     jobs:
-      - test
+      - python-job
