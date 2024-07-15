@@ -14,8 +14,8 @@ jobs:
         - run:
             name: Install dependencies
             command: |
-              . venv/bin/activate
               python -m venv venv
+              . venv/bin/activate
               pip install -r requirements.txt
               pip install pytest pytest-html python-dotenv
               pip install "python-dotenv[cli]"
