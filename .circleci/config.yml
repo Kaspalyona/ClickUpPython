@@ -35,6 +35,10 @@ jobs:
         - run:
             name: Run tests and generate report
             command: |
+              touch .env
+              echo "BASE_URL=$BASE_URL" >> .env
+              echo "TEAM_ID=$TEAM_ID" >> .env
+              echo "TOKEN=$TOKEN" >> .env
               . venv/bin/activate
               pytest Tests --html=report.html --self-contained-html
         - store_artifacts:
