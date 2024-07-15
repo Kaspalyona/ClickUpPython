@@ -19,26 +19,8 @@ jobs:
               pip install -r requirements.txt
               pip install pytest pytest-html python-dotenv
         - run:
-            name: Load environment variables
-            command: |
-              echo "Loading environment variables from CircleCI project settings"
-              touch .env
-              echo "BASE_URL=$BASE_URL" >> .env
-              echo "TEAM_ID=$TEAM_ID" >> .env
-              echo "TOKEN=$TOKEN" >> .env
-        - run:
-            name: Print environment variables
-            command: |
-              echo "BASE_URL: $BASE_URL"
-              echo "TEAM_ID: $TEAM_ID"
-              echo "TOKEN: $TOKEN"
-        - run:
             name: Run tests and generate report
             command: |
-              touch .env
-              echo "BASE_URL=$BASE_URL" >> .env
-              echo "TEAM_ID=$TEAM_ID" >> .env
-              echo "TOKEN=$TOKEN" >> .env
               . venv/bin/activate
               pytest Tests --html=report.html --self-contained-html
         - store_artifacts:
