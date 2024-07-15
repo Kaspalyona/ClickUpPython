@@ -17,22 +17,9 @@ jobs:
             python -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
-            pip install pytest pytest-html python-dotenv
       - run:
-          name: RUN
-          command: |
-            echo "RUN"
-            cat .env
-            . venv/bin/activate
-            python -c "import os; from dotenv import load_dotenv; load_dotenv(); print('BASE_URL:', os.getenv('BASE_URL')); print('TEAM_ID:', os.getenv('TEAM_ID')); print('TOKEN:', os.getenv('TOKEN'))"
-            . venv/bin/activate
-            pytest Tests --junitxml=junit.xml || (( $? == 5 ) && echo 'Did not find any tests to run.')
-      - store_artifacts:
-          path: junit.xml
-          destination: junit_report
-      - run:
-          name: Generate HTML report
-          command: |
+          name: Run tests
+          command: |        
             . venv/bin/activate
             pytest Tests --html=report.html --self-contained-html
       - store_artifacts:
