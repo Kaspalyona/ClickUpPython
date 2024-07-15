@@ -27,15 +27,12 @@ jobs:
             echo "TEAM_ID=${TEAM_ID}" >> .env
             echo "TOKEN=${TOKEN}" >> .env
       - run:
-          name: Print environment variables
+          name: RUN
           command: |
-            echo "Printing environment variables from .env file"
+            echo "RUN"
             cat .env
             . venv/bin/activate
             python -c "import os; from dotenv import load_dotenv; load_dotenv(); print('BASE_URL:', os.getenv('BASE_URL')); print('TEAM_ID:', os.getenv('TEAM_ID')); print('TOKEN:', os.getenv('TOKEN'))"
-      - run:
-          name: Run tests and generate JUnit XML report
-          command: |
             . venv/bin/activate
             pytest Tests --junitxml=junit.xml || (( $? == 5 ) && echo 'Did not find any tests to run.')
       - store_artifacts:
