@@ -23,6 +23,7 @@ jobs:
           command: |
             echo "Loading environment variables from CircleCI project settings"
             touch .env
+            echo "TOKEN=$TOKEN" >> .env
             echo "BASE_URL=$BASE_URL" >> .env
             echo "TEAM_ID=$TEAM_ID" >> .env
             . venv/bin/activate
