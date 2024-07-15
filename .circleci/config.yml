@@ -1,6 +1,6 @@
 version: 2.1
 
-python-job:
+test:
 
   jobs:
     docker:
@@ -28,4 +28,4 @@ workflows:
   version: 2
   test:
     jobs:
-      - python-job
+      - test
