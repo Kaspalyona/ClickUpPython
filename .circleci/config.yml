@@ -18,8 +18,7 @@ jobs:
               . venv/bin/activate
               pip install -r requirements.txt
               pip install pytest pytest-html python-dotenv
-              pip install "python-dotenv[cli]"
-         - run:
+        - run:
             name: Load environment variables
             command: |
               echo "Loading environment variables from CircleCI project settings"
@@ -27,6 +26,12 @@ jobs:
               echo "BASE_URL=$BASE_URL" >> .env
               echo "TEAM_ID=$TEAM_ID" >> .env
               echo "TOKEN=$TOKEN" >> .env
+        - run:
+            name: Print environment variables
+            command: |
+              echo "BASE_URL: $BASE_URL"
+              echo "TEAM_ID: $TEAM_ID"
+              echo "TOKEN: $TOKEN"
         - run:
             name: Run tests and generate report
             command: |
