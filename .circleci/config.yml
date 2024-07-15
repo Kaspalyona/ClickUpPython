@@ -18,6 +18,15 @@ jobs:
               . venv/bin/activate
               pip install -r requirements.txt
               pip install pytest pytest-html python-dotenv
+              pip install pytest pytest-html python-dotenv
+        - run:
+            name: Load environment variables
+            command: |
+              echo "Loading environment variables from CircleCI project settings"
+              touch .env
+              echo "BASE_URL=${BASE_URL}" >> .env
+              echo "TEAM_ID=${TEAM_ID}" >> .env
+              echo "TOKEN=${TOKEN}" >> .env
         - run: 
             name: "echo an env var that is part of our project"
             command: |
