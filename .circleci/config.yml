@@ -3,44 +3,52 @@ version: 2.1
 executors:
   python-executor:
     docker:
-      - image: circleci/python:3.9  # Використання образу з Python 3.9
+      - image: circleci/python:3.9
     working_directory: ~/repo
 
 jobs:
-    test:
-      executor: python-executor
-      steps:
-        - checkout
-        - run:
-            name: Install dependencies
-            command: |
-              python -m venv venv
-              . venv/bin/activate
-              pip install -r requirements.txt
-              pip install pytest pytest-html python-dotenv
-              pip install pytest pytest-html python-dotenv
-        - run:
-            name: Load environment variables
-            command: |
-              echo "Loading environment variables from CircleCI project settings"
-              touch .env
-              echo "BASE_URL=${BASE_URL}" >> .env
-              echo "TEAM_ID=${TEAM_ID}" >> .env
-              echo "TOKEN=${TOKEN}" >> .env
-        - run: 
-            name: "echo an env var that is part of our project"
-            command: |
-              echo $TOKEN
-              echo $BASE_URL
-              echo $TEAM_ID
-        - run:
-            name: Run tests and generate report
-            command: |
-              . venv/bin/activate
-              pytest Tests --html=report.html --self-contained-html
-        - store_artifacts:
-            path: ClickUpPython/report.ntml
-            destination: pytest_html_report
+  test:
+    executor: python-executor
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+            pip install pytest pytest-html python-dotenv
+      - run:
+          name: Load environment variables
+          command: |
+            echo "Loading environment variables from CircleCI project settings"
+            touch .env
+            echo "BASE_URL=${BASE_URL}" >> .env
+            echo "TEAM_ID=${TEAM_ID}" >> .env
+            echo "TOKEN=${TOKEN}" >> .env
+      - run:
+          name: Print environment variables
+          command: |
+            echo "Printing environment variables from .env file"
+            cat .env
+            . venv/bin/activate
+            python -c "import os; from dotenv import load_dotenv; load_dotenv(); print('BASE_URL:', os.getenv('BASE_URL')); print('TEAM_ID:', os.getenv('TEAM_ID')); print('TOKEN:', os.getenv('TOKEN'))"
+      - run:
+          name: Run tests and generate JUnit XML report
+          command: |
+            . venv/bin/activate
+            pytest Tests --junitxml=junit.xml || (( $? == 5 ) && echo 'Did not find any tests to run.')
+      - store_artifacts:
+          path: junit.xml
+          destination: junit_report
+      - run:
+          name: Generate HTML report
+          command: |
+            . venv/bin/activate
+            pytest Tests --html=report.html --self-contained-html
+      - store_artifacts:
+          path: report.html
+          destination: pytest_html_report
 
 workflows:
   version: 2
