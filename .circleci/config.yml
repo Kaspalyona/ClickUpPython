@@ -1,28 +1,26 @@
 version: 2.1
-
-test:
-
   jobs:
-    docker:
-      - image: circleci/python:3.9  
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            . venv/bin/activate
-            python -m venv venv
-            pip install -r requirements.txt
-            pip install pytest pytest-html python-dotenv
-            pip install "python-dotenv[cli]"
-      - run:
-          name: Run tests and generate report
-          command: |
-            . venv/bin/activate
-            pytest Tests --html=report.html --self-contained-html
-      - store_artifacts:
-          path: ClickUpPython/report.ntml
-          destination: pytest_html_report
+    test:
+      docker:
+        - image: circleci/python:3.9  
+      steps:
+        - checkout
+        - run:
+            name: Install dependencies
+            command: |
+              . venv/bin/activate
+              python -m venv venv
+              pip install -r requirements.txt
+              pip install pytest pytest-html python-dotenv
+              pip install "python-dotenv[cli]"
+        - run:
+            name: Run tests and generate report
+            command: |
+              . venv/bin/activate
+              pytest Tests --html=report.html --self-contained-html
+        - store_artifacts:
+            path: ClickUpPython/report.ntml
+            destination: pytest_html_report
 
 workflows:
   version: 2
