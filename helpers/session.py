@@ -5,7 +5,7 @@ load_dotenv()
 class Session(requests.Session):
     def __init__(self, base_url=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.base_url = https://api.clickup.com/api/v2
+        self.base_url = "https://api.clickup.com/api/v2"
 
     def request(self, method, url, *args, **kwargs):
         if self.base_url:
