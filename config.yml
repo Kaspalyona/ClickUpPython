@@ -3,7 +3,7 @@ version: 2.1
 executors:
   python-executor:
     docker:
-      - image: circleci/python:3.9
+      - image: circleci/python:3.9  
     working_directory: ~/repo
 
 jobs:
@@ -17,18 +17,35 @@ jobs:
             python -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
-            pip install pytest pytest-html
+            pip install pytest pytest-html python-dotenv
       - run:
-          name: Run tests and generate HTML report
+          name: Load environment variables
+          command: |
+            echo "Loading environment variables from CircleCI project settings"
+            touch .env
+            echo "BASE_URL=$BASE_URL" >> .env
+            echo "TEAM_ID=$TEAM_ID" >> .env
+            . venv/bin/activate
+            python -m dotenv -- venv/bin/activate
+      - run:
+          name: Run tests and generate JUnit XML report
+          command: |
+            . venv/bin/activate
+            pytest --junitxml=junit.xml || (( $? == 5 ) && echo 'Did not find any tests to run.')
+      - store_artifacts:
+          path: junit.xml
+          destination: junit_report
+      - store_artifacts:
+          path: test_log.log
+          destination: test_logs
+      - run:
+          name: Generate HTML report
           command: |
             . venv/bin/activate
             pytest --html=report.html --self-contained-html
       - store_artifacts:
           path: report.html
           destination: pytest_html_report
-      - store_artifacts:
-          path: test_log.log
-          destination: test_logs
 
 workflows:
   version: 2
