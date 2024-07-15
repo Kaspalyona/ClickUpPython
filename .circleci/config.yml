@@ -3,7 +3,7 @@ version: 2.1
 executors:
   python-executor:
     docker:
-      - image: circleci/python:3.9  
+      - image: circleci/python:3.8  # Оберіть необхідну версію Python
     working_directory: ~/repo
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
           name: Run tests and generate JUnit XML report
           command: |
             . venv/bin/activate
-            pytest --junitxml=junit.xml || (( $? == 5 ) && echo 'Did not find any tests to run.')
+            pytest tests --junitxml=junit.xml || (( $? == 5 ) && echo 'Did not find any tests to run.')
       - store_artifacts:
           path: junit.xml
           destination: junit_report
@@ -43,7 +43,7 @@ jobs:
           name: Generate HTML report
           command: |
             . venv/bin/activate
-            pytest --html=report.html --self-contained-html
+            pytest tests --html=report.html --self-contained-html
       - store_artifacts:
           path: report.html
           destination: pytest_html_report
